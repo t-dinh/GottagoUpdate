@@ -11,7 +11,12 @@
   "scripts": {
     "start": "react-native-scripts start",
     "eject": "react-native-scripts eject",
-    "android": "react-native-scripts android",
+    "android": {
+      "package": "com.codingmechanic.mapcuny",
+      "config": {
+         "googleMaps": { "apiKey": "AIzaSyAIWRWChgMPw6bFxmDhhzjcnm9eBT3YyCY" }  
+      }
+   },
     "ios": "react-native-scripts ios",
     "test": "jest"
   },

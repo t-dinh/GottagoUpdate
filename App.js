@@ -9,13 +9,14 @@ export default class App extends React.Component {
     const resizeMode = 'stretch'
     return (
       
-      <View style={styles.container}>
+      
       <ImageBackground 
         style={{
             flex: 1,
             resizeMode,
           }}
           source={require('./toiletpaper.jpg')}>
+        <View style={styles.container}>
       <TextInput
         textAlign='center'
         onChangeText={search => { this.setState({ search }) }}
@@ -23,14 +24,15 @@ export default class App extends React.Component {
         style={styles.textInput}
         placeholder="Search by Location"
         />
-        <Image source={require('./gottago2.png')} />
+        <Image source={require('./gottablue.png')} />
         
         <TouchableOpacity>
           <Text>Find a restroom</Text>
         </TouchableOpacity>
+        </View>
   </ImageBackground>
         
-      </View>
+      
     );
   }
 }
@@ -38,18 +40,21 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'salmon',
     alignItems: 'center',
     justifyContent: 'center',
 
   },
   textInput: {
-    
     height: 40,
     width: 300,
     borderRadius: 10,
     borderColor: 'powderblue',
     borderWidth: 1,
     marginBottom: 10
+  },
+  logo: {
+    width: 100,
+    flex: 1,
+    resizeMode: 'contain'
   }
 });
