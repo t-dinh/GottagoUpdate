@@ -1,44 +1,75 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Platform, TextInput, TouchableOpacity } from 'react-native';
 import { MapView } from 'expo';
 import Button from './button';
 import StarRating from './starRating';
-// import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import { connect } from 'react-redux';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
-export default class InputScreen extends React.Component {
+class InputScreen extends React.Component {
   state = {
-    ratings: "",
+    // ratings: "",
     business: "",
     address: "",
 
-    hours: "",
-    clean: "",
+    // hours: "",
+    // clean: "",
 
-    valueOne: 0,      // is public 0  or private 1
-    // valueTwo: 0,      // is free 0 or paid 1
-    // valueThree: 0,    // is accessible 0 or not 1
-    // valueFour: 0,     // is safe 0 or not 1
+    valueOne: 'public',      // is public 0  or private 1
+    valueTwo: 'free',      // is free 0 or paid 1
+    valueThree: 'clean',    // is clean 0 or not 1
+    valueFour: 'accessible',     // is safe 0 or not 1
     radioPropsOne: [
-      { label: 'Public', value: 0 },
-      { label: 'Private', value: 1 }
+      { label: 'Public', value: 'public' },
+      { label: 'Private', value: 'private' }
     ],
     radioPropsTwo: [
-      { label: 'Free', value: 0 },
-      { label: 'Paid', value: 1 }
+      { label: 'Free', value: 'free' },
+      { label: 'Paid', value: 'paid' }
     ],
     radioPropsThree: [
-      { label: 'Clean', value: 0 },
-      { label: 'Dirty', value: 1 }
+      { label: 'Clean', value: 'clean' },
+      { label: 'Dirty', value: 'dirty' }
     ],
     radioPropsFour: [
-      { label: 'Accessible', value: 0 },
-      { label: 'Not Accessible', value: 1 }
+      { label: 'Accessible', value: 'accessible',  },
+      { label: 'Not Accessible', value: 'not-accessible' }
     ],
 
+    latitude: 33.703677,
+    longitude: -117.846610,  
+
+    
     
   }
 
+  submitUser = () => {
+    console.log('button click')
+    let { business, address, valueOne, valueTwo, valueThree, valueFour } = this.state;
 
+    this.props.addInput({ business, address, valueOne, valueTwo, valueThree, valueFour });
+    console.log(this.state)
+    this.setState({
+      business: '',
+      address: '',
+      valueOne: '',
+      valueThree: '',
+      valueFour: ''
+    })
+  }
+
+  locate= (coords) => {
+    console.log('locate click')
+    let latitude = coords.nativeEvent.coordinate.latitude;
+    let longitude = coords.nativeEvent.coordinate.longitude;
+    this.setState({
+      latitude:latitude,
+      longitude:longitude,
+    },
+     () => { console.log(this.state.latitude, this.state.longitude) },
+     
+    )
+  }
 
 
   render() {
@@ -46,26 +77,25 @@ export default class InputScreen extends React.Component {
     let { textInput, addRestroomButton, radio, radioButton } = styles;
     return (
       <View style={styles.container}>
-      <MapView
+        <MapView
           style={{ height: 350, width: 300 }}
           // provider="google"
           initialRegion={{
-            latitude: 40.76727216,
-            longitude: -73.99392888,
+            latitude: 33.703677,
+            longitude: -117.846610,  
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421
           }}
+          onPress={this.locate}
         />
-         <Text>Add restroom page</Text>         
-         
-         <Text>Overall Rating</Text>
-         <StarRating
-         />
-        <Button
-          style={addRestroomButton}
-          text='Submit'
-          textStyle={{ color: 'white', fontWeight: 'bold', fontSize: 15 }}
+        
+
+        <Text>Add restroom page</Text>
+
+        <Text>Overall Rating</Text>
+        <StarRating
         />
+
         <TextInput
           placeholder='Business'
           textAlign='left'
@@ -84,44 +114,56 @@ export default class InputScreen extends React.Component {
         <StarRating
         />
         <View style={radio}>
-        <RadioForm
-        radio_props={radioPropsOne}
-        initial={0}
-        buttonColor={'#2196f3'}
-        onPress={(valueOne) => { this.setState({ valueOne }) }}
-        style={radioButton}
-        />
-        <RadioForm
-          radio_props={radioPropsTwo}
-          initial={0}
-          buttonColor={'#2196f3'}
-          onPress={(valueTwo) => { this.setState({ valueTwo }) }}
-          style={radioButton}
-        />
-        <RadioForm
-          radio_props={radioPropsThree}
-          initial={0}
-          buttonColor={'#2196f3'}
-          onPress={(valueThree) => { this.setState({ valueThree }) }}
-          style={radioButton}
-        />
-        <RadioForm
-          radio_props={radioPropsFour}
-          initial={0}
-          buttonColor={'#2196f3'}
-          onPress={(valueFour) => { this.setState({ valueFour }) }}
-          style={radioButton}
-        /> 
+          <RadioForm
+            radio_props={radioPropsOne}
+            initial={0}
+            buttonColor={'#2196f3'}
+            onPress={(valueOne) => { this.setState({ valueOne }) }}
+            style={radioButton}
+          />
+          <RadioForm
+            radio_props={radioPropsTwo}
+            initial={0}
+            buttonColor={'#2196f3'}
+            onPress={(valueTwo) => { this.setState({ valueTwo }) }}
+            style={radioButton}
+          />
+          <RadioForm
+            radio_props={radioPropsThree}
+            initial={0}
+            buttonColor={'#2196f3'}
+            onPress={(valueThree) => { this.setState({ valueThree }) }}
+            style={radioButton}
+          />
+          <RadioForm
+            radio_props={radioPropsFour}
+            initial={0}
+            buttonColor={'#2196f3'}
+            onPress={(valueFour) => { this.setState({ valueFour }) }}
+            style={radioButton}
+          />
         </View>
+        <Button
+          onPress={this.submitUser}
+          style={addRestroomButton}
+          text='Submit'
+          textStyle={{ color: 'white', fontWeight: 'bold', fontSize: 15 }}
+        />
       </View>
     );
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  addInput: input => dispatch({ type: 'INPUT_DATA', newInput: input })
+})
+
+export default connect(null, mapDispatchToProps)(InputScreen);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
+    marginTop: 20,
     backgroundColor: '#fff',
     alignItems: 'center',
     // justifyContent: 'center',
@@ -143,10 +185,10 @@ const styles = StyleSheet.create({
     width: 120,
     borderRadius: 5,
   },
-  radio:{
+  radio: {
     flexDirection: 'row',
     justifyContent: 'center',
-     
+
   },
   radioButton: {
     margin: 5,

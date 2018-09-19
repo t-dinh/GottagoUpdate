@@ -1,16 +1,24 @@
-import { MAP_DATA } from '../constants';
+import { MAP_DATA, INPUT_DATA } from '../constants';
 
 const initalState = {
-    mapLocation: {}
+    mapLocation: {},
+    userInput: []
+      
     
-  }
+    
+}
 
 
 
 const rootReducer = (state = initalState, action) => {
     switch (action.type) {
-      case MAP_DATA:
-        return { ...state, mapLocation: action.data };
+      case 'INPUT_DATA':
+        return {
+          userInput: [...state.userInput, action.newInput]
+        }
+        
+      // case MAP_DATA:
+      //   return { ...state.mapLocation, action.data };
       
       default:
         return state;

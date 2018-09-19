@@ -11,3 +11,5 @@ export const getLocation = () => dispatch => {
             dispatch({type: RECEIVED_DATA, data: res.data })
         })
 }
+
+export const addInput = input => ({ type: INPUT_DATA, newInput: input })

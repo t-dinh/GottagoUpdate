@@ -39,8 +39,7 @@ const RootStack = createStackNavigator(
   {
     home: HomeScreen,
     user: UserScreen,
-    input: InputScreen,
-    
+    input: InputScreen
   },
   {
     initialRouteName: 'home'

@@ -11,9 +11,9 @@ class HomeScreen extends Component {
         search: ''
     }
 
-    // static navigationOptions = {
-    //     title: 'Home'
-    // };
+    static navigationOptions = {
+        title: 'Home'
+    };
 
 
 
@@ -27,10 +27,10 @@ class HomeScreen extends Component {
                         resizeMode,
                     }}
                     source={require('../assets/toiletpaper.jpg')}>
-                    {/* <Button
+                    <Button
                         title="Go to User Input Page"
                         onPress={() => this.props.navigation.navigate('input')}
-                    /> */}
+                    />
                 <View style={styles.container}>
                     <TextInput
                         textAlign='center'
@@ -38,8 +38,9 @@ class HomeScreen extends Component {
                         value={this.state.search}
                         style={styles.textInput}
                         placeholder="Search by Location"
-                    /><TouchableOpacity >
-                    <Text >Go</Text>
+                    />
+                    <TouchableOpacity >
+                    <Text >Find a Restroom</Text>
                     </TouchableOpacity>
                     <Image style={styles.logo} source={require('../assets/gottablue.png')} />
                     
