@@ -1,60 +1,58 @@
+/**
+ *    README:
+ * 
+ *    This is a basic setup that has most of the npm packages and settings that
+ *    you'll want for a project (keep it as a reference)
+ *    
+ *    Included npm packages that you'd have to install yourself if setting up from scratch:
+ *    -> axios
+ *    -> react-redux
+ *    -> redux
+ *    -> redux-thunk
+ *    -> react-navigation
+ *    
+ *    Redux is setup with both thunk applied and react navigation wrapped.
+ *    There is a folder structure for redux available in 'components' as well
+ */
 import React from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
 
-export default class App extends React.Component {
-  state = {
-    search: ''
-  }
-  render() {
-    const resizeMode = 'stretch'
-    return (
-      
-      
-      <ImageBackground 
-        style={{
-            flex: 1,
-            resizeMode,
-          }}
-          source={require('./toiletpaper.jpg')}>
-        <View style={styles.container}>
-      <TextInput
-        textAlign='center'
-        onChangeText={search => { this.setState({ search }) }}
-        value={this.state.search}
-        style={styles.textInput}
-        placeholder="Search by Location"
-        />
-        <Image source={require('./gottablue.png')} />
-        
-        <TouchableOpacity>
-          <Text>Find a restroom</Text>
-        </TouchableOpacity>
-        </View>
-  </ImageBackground>
-        
-      
-    );
-  }
-}
+// Imports to setup Redux
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from './components/reducers';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+// Imports to setup React Navigation
+import { createStackNavigator } from 'react-navigation';
 
+import HomeScreen from './components/homeScreen';
+import UserScreen from './components/userScreen';
+import InputScreen from './components/inputScreen'
+// This is the same as how you'd setup Redux in regular React (JS)
+const store = createStore(
+  rootReducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  applyMiddleware(thunk)
+)
+
+const RootStack = createStackNavigator(
+  {
+    home: HomeScreen,
+    user: UserScreen,
+    input: InputScreen,
+    
   },
-  textInput: {
-    height: 40,
-    width: 300,
-    borderRadius: 10,
-    borderColor: 'powderblue',
-    borderWidth: 1,
-    marginBottom: 10
-  },
-  logo: {
-    width: 100,
-    flex: 1,
-    resizeMode: 'contain'
+  {
+    initialRouteName: 'home'
   }
-});
+)
+
+// Note that you will wrap your <Provider> around your main stack navigator rather than 
+// <MainPage /> or another React component
+const App = () => (
+  <Provider store={store}>
+    <RootStack />
+  </Provider>
+)
+
+export default App;
