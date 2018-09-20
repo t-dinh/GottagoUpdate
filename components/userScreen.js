@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Text, View, StyleSheet } from 'react-native';
 import { MapView } from 'expo';
 import { connect } from 'react-redux';
+import Geolocation from 'react-native-geolocation-service';
 
 class UserScreen extends Component {
   state = {
@@ -23,6 +24,30 @@ _handleLongPress = e => {
    markers: [...this.state.markers, marker],
   });
  };
+
+
+
+  componentDidMount() {
+    this.fetchCoords ();
+  }
+
+  fetchCoords = () => {
+    console.log('does this run')
+    
+      console.log('inside the if..')
+      Geolocation.getCurrentPosition(
+          (position) => {
+              console.log(position);
+          },
+          (error) => {
+              // See error code charts below.
+              console.log(error.code, error.message);
+          },
+          { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
+ 
+
+  }
 
 
   render() {
@@ -56,11 +81,8 @@ _handleLongPress = e => {
 
 }
 
-const mapDispatchToProps = dispatch => ({
 
-})
-
-export default connect(null, mapDispatchToProps)(UserScreen);
+export default UserScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -81,3 +103,6 @@ const styles = StyleSheet.create({
   },
 
 });
+
+
+
