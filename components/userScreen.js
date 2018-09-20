@@ -5,38 +5,50 @@ import { connect } from 'react-redux';
 
 class UserScreen extends Component {
   state = {
-    latitude: 33.703677,
-    longitude: -117.846610,
+      markers: [],
+    
   }
+// function for on drag
+_handleLongPress = e => {
+  const marker = {
+   coordinates: {
+    longitude: e.nativeEvent.coordinate.longitude,
+    latitude: e.nativeEvent.coordinate.latitude,
+   },
+  };
+
+  console.log('Event: ', marker);
+
+  this.setState({
+   markers: [...this.state.markers, marker],
+  });
+ };
+
 
   render() {
     return (
-      // <View style={styles.container}>
+      <View style={styles.container}>
       <MapView
-        style={{ flex: 1 }}
-        // provider="google"
-        showsUserLocation={true}
-        followUserLocation={true}
-        initialRegion={{
-          latitude: 33.703677,
-          longitude: -117.846610,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
+        style={styles.map}
+        region={{
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.015,
+          longitudeDelta: 0.0121,
         }}
-        scrollEnables={true}
-      >
-        <MapView.Marker
-          draggable
-          onDragEnd={(e) => {console.log('dragEnd', e.nativeEvent.coordinate)}}
-          coordinate={this.state}
-          title={"Some Title"}
-          description={"Hello world"}
-        />
+        //add marker when user presses and hold map
+        onLongPress={e => this._handleLongPress(e)}>
+        {this.state.markers.map((mark, i) => (
+          <MapView.Marker
+            key={i}
+            ref={this.setMarkerRef}
+            draggable
+            coordinate={mark.coordinates}
+          />
+        ))}
       </MapView>
-      // <Text>This is the User Screen!</Text>
-
-
-      // </View>
+    </View>
+      
     );
   }
 
