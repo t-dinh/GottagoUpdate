@@ -1,86 +1,128 @@
 import React, { Component } from 'react';
-
+import axios from 'axios';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackground, Button } from 'react-native';
 import { getLocation } from './actions';
-
-
 import { connect } from 'react-redux';
 
+import data from '../data/yelp'
+
+// const config = {
+//     header: {
+//         Authorization: 'Bearer SPlOW5mPO6FHbiwobWsp5xnPlohewSzdV9LNLTZ6xOXhBix3tbexOCaoMb2pTpLlNa4127b6Kj1hfyHqM3iu0KK6fuLEad4mDsCUhfMTxEPyEr55UGkK75FpQ8KhW3Yx',
+//         origin: 'localhost',
+//         xrequestedwith: 'react-native'
+//     },
+//     params: {
+//         term: 'tacos',
+//         location: '92840'
+//     }
+// }
+
 class HomeScreen extends Component {
-
     state = {
-        zip: ''
+        zip: '',
     }
-
     static navigationOptions = {
         header: null
     };
 
-    searchLoc = e => {
-        this.props.navigation.navigate('input');
-        this.props.getZip(this.state.zip);
-        this.setState({
-            zip: e.target.value
-        })
-        console.log(this.state.zip);
+
+
+
+    // componentDidMount() {
+
+    //     console.log(data.businesses);
+    //     this.setState({
+    //         businesses: data.businesses
+    //     })
+        // axios.get('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search', config)
+        //         .then(res => {
+        //             console.log(res.data)
+        //         })
+        //         .catch(err => {
+        //             console.log(err.response)
+        //         })
+    // }
+
+    getBusinesses = zip => {
+        axios.get(`https://api.yelp.com/v3/businesses/search?location=${this.state.zip}`, config)
+            .then(res => {
+                console.log(res.data)
+
+            })
     }
 
     render() {
 
         return (
 
-            <ImageBackground
-                imageStyle={{
-                    resizeMode: "stretch",
-                }}
-                style={{
-                    flex: 1,
-                    justifyContent: "space-evenly",
-                    alignItems: 'center',
+            // <ImageBackground
+            //     imageStyle={{
+            //         resizeMode: "cover",
+            //     }}
+            //     style={{
+            //         flex: 1,
+            //         height: 270,
+            //         width: 400,
+            //         justifyContent: "space-evenly",
+            //         alignItems: 'center',
+
+            //     }}
+            //     source={require('../assets/toiletpaper.jpg')}>
+            <View style={{
+                flex: 1,
+                justifyContent: "space-evenly",
+                alignItems: 'center'
+            }}>
+                <View style={{ alignItems: 'center' }}>
+                <Image style={styles.logo} source={require('../assets/gottablue.png')} />
+                <Text>Find Restrooms on the Go!</Text>
+                <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => this.props.navigation.navigate('user')}
+                    >
+                        <Text >Quick Find</Text>
+                    </TouchableOpacity>
+                    <TextInput
+                        placeholderTextColor="black"
+                        underlineColorAndroid='rgba(0,0,0,0)'
+                        textAlign='center'
+                        onChangeText={zip => { this.setState({ zip }) }}
+                        value={this.state.zip}
+                        style={styles.textInput}
+                        placeholder="Search by Zipcode"
+                    />
+                    <TouchableOpacity >
+                        <Text style={{ fontSize: 20 }} onPress={this.getBusinesses}>Go</Text>
+                    </TouchableOpacity>
+                </View>
+
+
+                <View>
+
                     
-                }}
-                source={require('../assets/toiletpaper.jpg')}>
-                <Button
+                    <Button
                         title="Go to User Input Page"
                         onPress={() => this.props.navigation.navigate('input')}
                     />
-                    <View style={{alignItems:'flex-start'}}>
-                <TextInput
-                    placeholderTextColor="black"
-                    underlineColorAndroid='rgba(0,0,0,0)'
-                    textAlign='center'
-                    onChangeText={zip => { this.setState({ zip }) }}
-                    value={this.state.zip}
-                    style={styles.textInput}
-                    placeholder="Search by Location"
-                />
-                <TouchableOpacity >
-                    <Text style={{fontSize: 20}} onPress={this.searchLoc}>Go</Text>
-                </TouchableOpacity>
                 </View>
-
-                <Image style={styles.logo} source={require('../assets/gottablue.png')} />
-
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => this.props.navigation.navigate('user')}
-                >
-                    <Text >Find the Nearest Restroom</Text>
-                </TouchableOpacity>
-
-            </ImageBackground>
+            </View>
+            // </ImageBackground>
 
 
         );
     }
 }
+// const mapStateToProps = state => {
+//     return { zip: state.zip}
+// };
 
-const mapDispatchToProps = dispatch => ({
-    // import 'getLocation' from actions
-    getZip: zip => dispatch(getLocation(zip))
-})
+// const mapDispatchToProps = dispatch => ({
+//     // import 'getLocation' from actions
+//     getZip: zip => dispatch(getLocation(zip))
+// })
 
-export default connect(null, mapDispatchToProps)(HomeScreen);
+export default HomeScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -103,20 +145,19 @@ const styles = StyleSheet.create({
         // marginBottom: 10
     },
     logo: {
+        height: 190,
         width: 400,
-        height: 160,
-        // marginBottom: 0,
         resizeMode: 'contain'
     },
     button: {
-        // borderColor: 'yelloworange',
+        backgroundColor: 'powderblue',
         // flexDirection: 'column',
         borderColor: 'powderblue',
         borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        height:100,
-        width: 100,
+        height: 40,
+        width: 200,
         borderRadius: 10,
     },
 });

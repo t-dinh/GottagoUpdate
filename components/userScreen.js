@@ -1,14 +1,59 @@
 import React, { Component } from 'react';
-import { Button, Text, View, StyleSheet } from 'react-native';
-import { MapView } from 'expo';
+import { Button, Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Location, Permissions, MapView } from 'expo';
 import { connect } from 'react-redux';
 import Geolocation from 'react-native-geolocation-service';
+import Yelp from './yelp'
+import Data from '../data/yelp'
 
 class UserScreen extends Component {
   state = {
       markers: [],
+      region: null,
+    coffeeShops: [],
+    businesses:[]
     
   }
+//expressopedia functions
+componentWillMount() {
+  this.getLocationAsync();
+}
+
+componentDidMount() {
+
+  console.log(data.businesses);
+  this.setState({
+      businesses: data.businesses
+  })}
+
+getCoffeeShops = async () => {
+  const { latitude, longitude } = this.state.region;
+  const userLocation = { latitude, longitude };
+  const coffeeShops = await YelpService.getCoffeeShops(userLocation);
+  this.setState({ coffeeShops });
+};
+
+
+getLocationAsync = async () => {
+  let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  if (status !== 'granted') {
+    this.setState({
+      errorMessage: 'Permission to access location was denied'
+    });
+    await this.getCoffeeShops();
+  }
+  console.log(Location);
+
+  let location = await Location.getCurrentPositionAsync({});
+
+  const region = {
+    latitude: location.coords.latitude,
+    longitude: location.coords.longitude,
+    ...deltas
+  };
+  await this.setState({ region });
+}
+
 // function for on drag
 _handleLongPress = e => {
   const marker = {
@@ -27,9 +72,9 @@ _handleLongPress = e => {
 
 
 
-  componentDidMount() {
-    this.fetchCoords ();
-  }
+  // componentDidMount() {
+  //   this.fetchCoords ();
+  // }
 
   fetchCoords = () => {
     console.log('does this run')
@@ -53,7 +98,7 @@ _handleLongPress = e => {
   render() {
     return (
       <View style={styles.container}>
-      <MapView
+      {/* <MapView
         style={styles.map}
         region={{
           latitude: 37.78825,
@@ -71,7 +116,30 @@ _handleLongPress = e => {
             coordinate={mark.coordinates}
           />
         ))}
-      </MapView>
+      </MapView> */}
+
+    {/* //attempt to map markers */}
+      {/* <View>{this.state.businesses.map((x, index) => {
+        return (
+          <MapView.Marker
+            key={index}
+            ref={this.setMarkerRef}
+            draggable
+            coordinate={x.coordinates} 
+          />)
+          </View> */}
+      
+      <View>{this.stat.businesses.map((x, index) => {
+        return (
+          <View key= {index}>
+          <Text>{x.name}</Text>
+          <Text>{x.location.display_address}</Text>
+          <Text>Distance: {Math.floor(x.distance)}m</Text>
+          
+          </View>
+          
+        )
+      })}</View>
     </View>
       
     );
