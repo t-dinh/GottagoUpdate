@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Text, View, StyleSheet, ScrollView } from 'react-native';
+import { Button, Text, View, StyleSheet, ScrollView, FlatList, ListView } from 'react-native';
 import { Location, Permissions, MapView } from 'expo';
 import { connect } from 'react-redux';
 import Geolocation from 'react-native-geolocation-service';
@@ -101,46 +101,80 @@ class UserScreen extends Component {
 
   render() {
     return (
-      <MapView
-        style={{ flex: 1 }}
-        region={{
-         ...this.state.region,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        }}
-        //add marker when user presses and hold map
-        onLongPress={e => this._handleLongPress(e)}
-      >
-        {
-          this.state.businesses.map((x, index) => {
-            console.log("COORDINATES:", x.coordinates.latitude, x.coordinates.longitude)
-            return (
-              <MapView.Marker
-                key={index}
-                // ref={this.setMarkerRef}
-                draggable
-                coordinate={x.coordinates}
-              />)
-          })
+      <View>
+        <MapView
+          style={{
+            height: 400
+          }}
+          region={{
+            ...this.state.region,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.0121,
+          }}
+          //add marker when user presses and hold map
+          onLongPress={e => this._handleLongPress(e)}
+        >
+          <MapView.Marker
+
+            pinColor='gold'
+            coordinate={{
+              latitude: this.state.region.latitude,
+              longitude: this.state.region.longitude
+            }}
+            title="You are Here"
+
+          />
+          {
+            this.state.businesses.map((x, index) => {
+              console.log("COORDINATES:", x.coordinates.latitude, x.coordinates.longitude)
+              return (
+                <MapView.Marker
+                  key={index}
+                  // ref={this.setMarkerRef}
+                  draggable
+                  coordinate={x.coordinates}
+                  title={x.name}
+                  description={x.location.address1}
+                  description2={x.location.address2}
+                />)
+            })
+          }
+        </MapView>
+        <ScrollView style={{height: 160}}>
+        {/* <FlatList
+          data={this.state.businesses}
+          style={styles.list}
+          renderItem={({ item }) => 
+          <View>
+          <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{item.name}</Text>
+          <Text style={{ fontSize: 15 }}>{item.location.address1} {item.location.address2}</Text>
+                  <Text style={{ fontSize: 15 }}>{item.location.city} {item.location.zip_code}</Text>
+                  <Text style={{ fontSize: 15, borderBottomColor: 'white' }}>Distance: {Math.floor(item.distance)}m</Text>
+                  </View>
         }
-      </MapView>
+          keyExtractor={(item, i) => i + ''}
+        /> */}
+          {
+            this.state.businesses.map((n, i) => {
+              console.log(Math.floor(n.distance))
+              return (
 
+                <View key={i} style={styles.list}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{n.name}</Text>
+                  <Text style={{ fontSize: 15 }}>{n.location.address1} {n.location.address2}</Text>
+                  <Text style={{ fontSize: 15 }}>{n.location.city} {n.location.zip_code}</Text>
+                  <Text style={{ fontSize: 15 }}>Distance: {Math.floor(n.distance)}m</Text>
 
-  
+                </View>
 
-  // this.state.businesses.map((x, index) => {
-  //   return (
-  //     <View key={index}>
-  //       <Text>{x.name}</Text>
-  //       <Text>{x.location.display_address}</Text>
-  //       <Text>Distance: {Math.floor(x.distance)}m</Text>
-
-  //     </View>
-
-  //   )
-  // })
-);
-}
+              )
+            })
+          }
+        </ScrollView>
+      </View>
+ 
+    );
+  }
 
 }
 
@@ -164,6 +198,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10
   },
+  list: {
+    height: 100,
+    backgroundColor: 'powderblue',
+    opacity: .5,
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 5
+  }
 
 });
 
