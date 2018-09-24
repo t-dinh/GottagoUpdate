@@ -3,8 +3,9 @@ import { Button, Text, View, StyleSheet, ScrollView, FlatList, ListView } from '
 import { Location, Permissions, MapView } from 'expo';
 import { connect } from 'react-redux';
 import Geolocation from 'react-native-geolocation-service';
-import Yelp from './yelp';
-import Data from '../data/yelp'
+// import Yelp from './yelp';
+import Data from '../data/yelp';
+import axios from 'axios'
 
 class UserScreen extends Component {
   state = {
@@ -13,7 +14,6 @@ class UserScreen extends Component {
       latitude: 33.703927,
       longitude: -117.846567,
     },
-    coffeeShops: [],
     businesses: []
 
   }
@@ -23,15 +23,30 @@ class UserScreen extends Component {
 
   componentWillMount() {
     this.getLocationAsync();
+    
   }
 
-  componentDidMount() {
-
-    console.log("businesses", Data.businesses);
-    this.setState({
-      businesses: Data.businesses
+componentDidMount() {
+  
+    axios.get('http://localhost:3000?location=&latitude=33.7037&longitude=-117.8466&radius=500&sort_by=distance') 
+    .then(response => {
+      console.log(response);
+      this.setState({
+        businesses: res.data
+      })
+      .catch(error => {
+        console.log(error);
+      })
     })
   }
+
+  //  componentDidMount() {
+
+  //   console.log("businesses", Data.businesses);
+  //   this.setState({
+  //     businesses: Data.businesses
+  //   })
+  // }
 
   getCoffeeShops = async () => {
     const { latitude, longitude } = this.state.region;
@@ -131,19 +146,7 @@ class UserScreen extends Component {
           }
         </MapView>
         <ScrollView style={{ height: 160 }}>
-          {/* <FlatList
-          data={this.state.businesses}
-          style={styles.list}
-          renderItem={({ item }) => 
-          <View>
-          <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{item.name}</Text>
-          <Text style={{ fontSize: 15 }}>{item.location.address1} {item.location.address2}</Text>
-                  <Text style={{ fontSize: 15 }}>{item.location.city} {item.location.zip_code}</Text>
-                  <Text style={{ fontSize: 15, borderBottomColor: 'white' }}>Distance: {Math.floor(item.distance)}m</Text>
-                  </View>
-        }
-          keyExtractor={(item, i) => i + ''}
-        /> */}
+          
           {
             this.state.businesses.map((n, i) => {
               console.log(Math.floor(n.distance))

@@ -40,9 +40,9 @@ class HomeScreen extends Component {
                     <View style={{ alignItems: 'center', justifyContent: "space-evenly" }}>
                     <Image style={styles.logo} source={require('../assets/gottablue.png')} />
                     <TouchableOpacity
-                        style={styles.button}
+                        style={styles.button1}
                         onPress={() => this.props.navigation.navigate('user')}>
-                        <Text >Quick Find</Text>
+                        <Text style={{fontWeight: 'bold', fontSize: 20}} >Quick Find</Text>
                     </TouchableOpacity>
                     {/* <Text>Or</Text>
                     <TextInput
@@ -58,10 +58,10 @@ class HomeScreen extends Component {
                         <Text style={{ fontSize: 20 }} onPress={this.getZip}>Go</Text>
                     </TouchableOpacity> */}
                      </View>
-                    <View style={{justifyContent: "space-around",
+                    <View style={{justifyContent: "space-evenly",
                     alignItems: 'center'}}>
                     <TouchableOpacity
-                        style={styles.button}
+                        style={styles.button2}
                         title="Enter a Restroom"
                         onPress={() => this.props.navigation.navigate('input')}>  
                         <Text>Submit a Restroom</Text>
@@ -112,7 +112,19 @@ const styles = StyleSheet.create({
         width: 400,
         resizeMode: 'contain'
     },
-    button: {
+    button1: {
+        backgroundColor: 'powderblue',
+        opacity: 0.5,
+        borderColor: 'powderblue',
+        borderWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 100,
+        width: 110,
+        borderRadius: 10,
+        marginBottom:10
+    },
+    button2: {
         backgroundColor: 'powderblue',
         opacity: 0.5,
         borderColor: 'powderblue',
@@ -120,8 +132,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: 50,
-        width: 130,
+        width: 110,
         borderRadius: 10,
+        marginBottom: 10
     },
 });
 

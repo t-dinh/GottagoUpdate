@@ -14,7 +14,7 @@ import HomeScreen from './components/homeScreen';
 import UserScreen from './components/userScreen';
 import InputScreen from './components/inputScreen';
 import ViewScreen from './components/viewScreen';
-import SearchLocRes from './components/searchLocRes';
+
 
 const store = createStore(
   rootReducer,
@@ -27,8 +27,7 @@ const RootStack = createStackNavigator(
     home: HomeScreen,
     user: UserScreen,
     input: InputScreen,
-    view: ViewScreen,
-    search: SearchLocRes
+    view: ViewScreen
   },
   {
     initialRouteName: 'home'
