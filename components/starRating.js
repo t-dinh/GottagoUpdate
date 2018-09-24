@@ -1,35 +1,29 @@
 import React, { Component } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View } from 'react-native';
+import Stars from 'react-native-stars';
 
 
+class StarRating extends Component {
 
- class StarRating extends Component {
-	render() {
-		return (
-			<View style={ styles.container }>
-            <Image
-                style={styles.image}
-                source={require('../assets/selected_star.png')}
-            />
-            <Image
-                style={styles.image}
-                source={require('../assets/selected_star.png')}
-            />
-            <Image
-                style={styles.image}
-                source={require('../assets/selected_star.png')}
-            />
-            <Image
-                style={styles.image}
-                source={require('../assets/selected_star.png')}
-            />
-            <Image
-                style={styles.image}
-                source={require('../assets/selected_star.png')}
-            />    
-			</View>
-		);
-	}
+    render() {
+        return (
+            <View>
+                <Stars
+                    half={true}
+                    default={2.5}
+                    update={(val) => { this.props.changeRatings(val) }}
+                    spacing={4}
+                    starSize={25}
+                    count={5}
+                    fullStar={require('../assets/starFilled.png')}
+                    emptyStar={require('../assets/starEmpty.png')}
+                    halfStar={require('../assets/starHalf.png')}
+                />
+            </View>
+
+
+        );
+    }
 }
 
 
@@ -37,15 +31,5 @@ import { View, Image, StyleSheet } from 'react-native';
 
 export default StarRating;
 
-const styles = StyleSheet.create({
-  container: {
-    width: 150,
-    height: 25,
-    flexDirection: 'row',
-    backgroundColor: 'blue'
-  },
-  image: {
-    width: 25,
-    height: 25
-  }
-});
+
+            

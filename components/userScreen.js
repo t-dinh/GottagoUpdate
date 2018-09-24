@@ -3,13 +3,13 @@ import { Button, Text, View, StyleSheet, ScrollView, FlatList, ListView } from '
 import { Location, Permissions, MapView } from 'expo';
 import { connect } from 'react-redux';
 import Geolocation from 'react-native-geolocation-service';
-import Yelp from './yelp'
+import Yelp from './yelp';
 import Data from '../data/yelp'
 
 class UserScreen extends Component {
   state = {
     markers: [],
-    region: {
+    coords: {
       latitude: 33.703927,
       longitude: -117.846567,
     },
@@ -17,14 +17,17 @@ class UserScreen extends Component {
     businesses: []
 
   }
-  //expressopedia functions
+  static navigationOptions = {
+    title: "Your Current Location"
+  };
+
   componentWillMount() {
     this.getLocationAsync();
   }
 
   componentDidMount() {
 
-    console.log("buinesses", Data.businesses);
+    console.log("businesses", Data.businesses);
     this.setState({
       businesses: Data.businesses
     })
@@ -37,7 +40,6 @@ class UserScreen extends Component {
     this.setState({ coffeeShops });
   };
 
-
   getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
@@ -49,20 +51,19 @@ class UserScreen extends Component {
     console.log(Location);
 
     let location = await Location.getCurrentPositionAsync({});
-
-    const region = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    };
-    this.setState({ region });
+    this.setState({
+      coords: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      }
+    })
   }
 
-  // function for on drag
   _handleLongPress = e => {
     const marker = {
-      coordinates: {
-        longitude: e.nativeEvent.coordinate.longitude,
-        latitude: e.nativeEvent.coordinate.latitude,
+      coords: {
+        longitude: e.nativeEvent.coords.longitude,
+        latitude: e.nativeEvent.coords.latitude,
       },
     };
 
@@ -72,12 +73,6 @@ class UserScreen extends Component {
       markers: [...this.state.markers, marker],
     });
   };
-
-
-
-  // componentDidMount() {
-  //   this.fetchCoords ();
-  // }
 
   fetchCoords = () => {
     console.log('does this run')
@@ -97,8 +92,6 @@ class UserScreen extends Component {
 
   }
 
-  // <View style={styles.container}>
-
   render() {
     return (
       <View>
@@ -107,7 +100,7 @@ class UserScreen extends Component {
             height: 400
           }}
           region={{
-            ...this.state.region,
+            ...this.state.coords,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
           }}
@@ -115,14 +108,11 @@ class UserScreen extends Component {
           onLongPress={e => this._handleLongPress(e)}
         >
           <MapView.Marker
-
             pinColor='gold'
-            coordinate={{
-              latitude: this.state.region.latitude,
-              longitude: this.state.region.longitude
-            }}
+            coordinate={
+              this.state.coords
+            }
             title="You are Here"
-
           />
           {
             this.state.businesses.map((x, index) => {
@@ -140,8 +130,8 @@ class UserScreen extends Component {
             })
           }
         </MapView>
-        <ScrollView style={{height: 160}}>
-        {/* <FlatList
+        <ScrollView style={{ height: 160 }}>
+          {/* <FlatList
           data={this.state.businesses}
           style={styles.list}
           renderItem={({ item }) => 
@@ -172,7 +162,7 @@ class UserScreen extends Component {
           }
         </ScrollView>
       </View>
- 
+
     );
   }
 

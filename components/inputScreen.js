@@ -1,155 +1,73 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { MapView } from 'expo';
-import Button from './button';
-import StarRating from './starRating';
 import { connect } from 'react-redux';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import InputForm from './inputForm';
+
 
 class InputScreen extends React.Component {
   state = {
-    // ratings: "",
-    business: "",
-    address: "",
-
-    // hours: "",
-    // clean: "",
-
-    valueOne: 'public',      // is public 0  or private 1
-    valueTwo: 'free',      // is free 0 or paid 1
-    valueThree: 'clean',    // is clean 0 or not 1
-    valueFour: 'accessible',     // is safe 0 or not 1
-    radioPropsOne: [
-      { label: 'Public', value: 'public' },
-      { label: 'Private', value: 'private' }
-    ],
-    radioPropsTwo: [
-      { label: 'Free', value: 'free' },
-      { label: 'Paid', value: 'paid' }
-    ],
-    radioPropsThree: [
-      { label: 'Clean', value: 'clean' },
-      { label: 'Dirty', value: 'dirty' }
-    ],
-    radioPropsFour: [
-      { label: 'Accessible', value: 'accessible',  },
-      { label: 'Not Accessible', value: 'not-accessible' }
-    ],
-
     latitude: 33.703677,
-    longitude: -117.846610,  
-
-    
-    
+    longitude: -117.846610,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+    userRating: []
   }
+  static navigationOptions = {
+    title: 'Submit a Restroom'
+};
 
-  submitUser = () => {
-    console.log('button click')
-    let { business, address, valueOne, valueTwo, valueThree, valueFour } = this.state;
-
-    this.props.addInput({ business, address, valueOne, valueTwo, valueThree, valueFour });
-    console.log(this.state)
-    this.setState({
-      business: '',
-      address: '',
-      valueOne: '',
-      valueThree: '',
-      valueFour: ''
+  submitUser = data => {
+    console.log('button click');
+    console.log(this.state);
+    this.props.addInput({
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
+      // userRating: data
     })
+    this.props.navigation.navigate('view', {
+      redirect: true,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude
+    })
+
+
   }
 
-  locate= (coords) => {
+  locate = (coords) => {
     console.log('locate click')
     let latitude = coords.nativeEvent.coordinate.latitude;
     let longitude = coords.nativeEvent.coordinate.longitude;
     this.setState({
-      latitude:latitude,
-      longitude:longitude,
+      latitude: latitude,
+      longitude: longitude,
     },
-     () => { console.log(this.state.latitude, this.state.longitude) },
-     
+      () => { console.log(this.state.latitude, this.state.longitude) },
+
     )
   }
 
-
   render() {
-    let { ratings, business, address, hours, radioPropsOne, radioPropsTwo, radioPropsThree, radioPropsFour, valueOne, valueTwo, valueThree, valueFour } = this.state
-    let { textInput, addRestroomButton, radio, radioButton } = styles;
     return (
-      <View style={styles.container}>
+      <ScrollView style={{height: 100}}>
+      <View style={{justifyContent:'center', alignItems:'center', backgroundColor:'#eeeeff'}}>
         <MapView
-          style={{ height: 350, width: 300 }}
-          // provider="google"
-          initialRegion={{
-            latitude: 33.703677,
-            longitude: -117.846610,  
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
-          }}
+          style={{height:280, width:360, marginBottom:5}}
+          initialRegion={this.state}
           onPress={this.locate}
-        />
-        
-
-        <Text>Add restroom page</Text>
-
-        <Text>Overall Rating</Text>
-        <StarRating
-        />
-
-        <TextInput
-          placeholder='Business'
-          textAlign='left'
-          onChangeText={business => { this.setState({ business }) }}
-          value={business}
-          style={textInput}
-        />
-        <TextInput
-          placeholder='Address'
-          textAlign='left'
-          onChangeText={address => { this.setState({ address }) }}
-          value={address}
-          style={textInput}
-        />
-        <Text>Cleanliness Rating</Text>
-        <StarRating
-        />
-        <View style={radio}>
-          <RadioForm
-            radio_props={radioPropsOne}
-            initial={0}
-            buttonColor={'#2196f3'}
-            onPress={(valueOne) => { this.setState({ valueOne }) }}
-            style={radioButton}
+        >
+          <MapView.Marker
+            draggable
+            onDragEnd={(e) => { console.log('dragEnd', e.nativeEvent.coordinate) }}
+            coordinate={{ latitude: this.state.latitude, longitude: this.state.longitude }}
+            title="Your Selection"
+            description=""
+            pinColor='#6495ed'
           />
-          <RadioForm
-            radio_props={radioPropsTwo}
-            initial={0}
-            buttonColor={'#2196f3'}
-            onPress={(valueTwo) => { this.setState({ valueTwo }) }}
-            style={radioButton}
-          />
-          <RadioForm
-            radio_props={radioPropsThree}
-            initial={0}
-            buttonColor={'#2196f3'}
-            onPress={(valueThree) => { this.setState({ valueThree }) }}
-            style={radioButton}
-          />
-          <RadioForm
-            radio_props={radioPropsFour}
-            initial={0}
-            buttonColor={'#2196f3'}
-            onPress={(valueFour) => { this.setState({ valueFour }) }}
-            style={radioButton}
-          />
-        </View>
-        <Button
-          onPress={this.submitUser}
-          style={addRestroomButton}
-          text='Submit'
-          textStyle={{ color: 'white', fontWeight: 'bold', fontSize: 15 }}
-        />
+        </MapView>
+        <InputForm submitUser={this.submitUser} position={this.state.position} />
       </View>
+      </ScrollView>
     );
   }
 }
@@ -160,38 +78,3 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(null, mapDispatchToProps)(InputScreen);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 20,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    // justifyContent: 'center',
-  },
-  textInput: {
-    backgroundColor: 'white',
-    height: 30,
-    width: 200,
-    borderRadius: 5,
-    borderColor: 'blue',
-    borderWidth: 1,
-    marginBottom: 10
-  },
-  addRestroomButton: {
-    backgroundColor: 'skyblue',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 35,
-    width: 120,
-    borderRadius: 5,
-  },
-  radio: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-
-  },
-  radioButton: {
-    margin: 5,
-    padding: 5,
-  }
-});

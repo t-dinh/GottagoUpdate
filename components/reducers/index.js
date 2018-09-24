@@ -1,22 +1,14 @@
-import {RECEIVED_DATA, MAP_DATA, INPUT_DATA } from '../constants';
+import { REQUESTED_DATA } from '../constants';
 
-const initalState = {
-   
-      
-    
-    
+const initialState = {}
+
+const rootReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case REQUESTED_DATA:
+      return action.payload;
+    default:
+      return state;
+  }
 }
 
-
-
-const rootReducer = (state = initalState, action) => {
-    switch (action.type) {
-      case 'RECEIVED_DATA':
-        return action.payload
-      
-      default:
-        return state;
-    }
-  }
-  
-  export default rootReducer;
+export default rootReducer;
