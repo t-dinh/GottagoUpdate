@@ -11,3 +11,5 @@ export const getLocation = (zip) => dispatch => {
 }
 
 export const sendData = data => ({ type: REQUESTED_DATA, newInput: input })
+
+export const addInput = input => ({ type: INPUT_DATA, newInput: input })
